@@ -38,7 +38,7 @@ class CommentForm(forms.ModelForm):
         fields = ('text',)
 
     def __init__(self, *args, **kwargs): # nfhb jfhbdfb dj
-        super().__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs) #mskjdfnskjdfnkasf
         for field in self.fields:
             self.fields[field].widget.attrs['class'] = 'form-control'
         self.fields['text'].widget= Textarea(attrs={'rows':3})
