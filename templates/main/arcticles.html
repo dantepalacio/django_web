@@ -1,0 +1,44 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+
+
+<div class="container mt-4">
+    <h1>Статьи</h1>
+    <a href="{%url 'create'%}"><button type="button" class="btn btn-primary mb-4">Добавить новую статью</button></a>
+  
+    {% comment %} {% for i in list_arcticles %}
+
+    <ul class="list-group mt-4">
+        <li class="list-group-item">
+            <b>{{i.name}} <br/></b>
+            <p>{{i.author}}</p>
+            <span>{{i.text|truncatechars:'20'}} <br/></span>
+            <span><a href="/detail/{{i.id}}">Перейти к теме</a></span>
+
+            
+            
+        </li>
+    </ul>
+    {% endfor %} {% endcomment %}
+
+    {%load static%}
+    {% for i in list_arcticles %}
+    <div class="card mb-4">
+        <div class="card-header">
+          {{i.author}} 
+          <p class='comment_date'>{{i.date}}</p>
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">{{i.name}}</h5>
+          <p class="card-text">{{i.text}}</p>
+
+
+          <a href="/detail/{{i.id}}" class="btn btn-primary">Читать</a>
+        </div>
+      </div>
+    {% endfor %}
+
+</div>
+
+{% endblock content %}

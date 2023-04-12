@@ -1,0 +1,112 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+{% load static%}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<div class='container'>
+    <p><a href="/arcticles/">Назад</a></p>
+    <h1>Статья: {{arcticle.name}}</h1>
+    <h3>Автор: {{arcticle.author}}</h3>
+    <p>
+        {{arcticle.text}}
+    </p>
+
+    {% comment %} ЛАЙК {% endcomment %}
+
+    
+
+    <div id="like-section">
+      <a name="{{ arcticle.id }}" data-status = "{{status}}"style="font-size:48px; color: green" class="likin" id="co"><i class="fa fa-thumbs-up" aria-hidden="true"></i>(<span id="likes">{{likes.count}}</span>)</a>
+      <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-sm">Лайкнувшие</button>
+      <div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+          <div class="modal-content">
+            ...
+          </div>
+        </div>
+      </div>
+    </div>  
+    {% comment %} asdasd {{ arcticle.likes }} {% endcomment %}
+    <script>
+      $('.likin').click(function(){
+        $.ajax({
+          type: "POST",
+          url: "{% url 'like_arcticle' %}",
+          data: {
+            'arcticle_id': $(this).attr('name'),
+            'operation':'like_submit',
+            'csrfmiddlewaretoken': '{{ csrf_token }}'
+          },
+          dataType: "json",
+          success: function(response) {
+            var parsedResponse = JSON.parse(response);
+            var selector = document.getElementsByName(parsedResponse.arcticle_id);
+            if(parsedResponse.status==true){
+              $(selector).css("color","green");
+            }
+            else if(parsedResponse.status==false){
+              $(selector).css("color","black");
+            }
+            $("#likes").text(parsedResponse.user_likes);
+          }
+        });
+      });
+    </script>
+
+
+
+
+
+
+    {% comment %} ЛАЙК {% endcomment %}
+
+
+
+    <p>Комментарии ({{arcticle.comments_arcticle.all.count}})</p>
+
+    <!-- {{arcticle.comments_arcticle.all}} -->
+    <ul class="list-group">
+
+    {%for item in arcticle.comments_arcticle.all%}
+
+    <li class="list-group-item">
+    <p class="comment_author">{{item.author}}<br></p>
+    <p class="comment_date">{{item.date}}<br></p>
+    
+    <!-- Статус комментария: {{item.status}}<br> -->
+
+    <p class="comment_text">{{item.text}}<br></p>
+
+    </li>
+
+    {%endfor%}
+
+    </ul>
+
+
+
+    <hr>
+    <p>Добавить комментарий</p>
+
+    {% if messages %}
+
+    <div class="alert alert-success">
+      {% for m in messages %}
+        {{m}}
+      {% endfor %}
+    </div>
+  
+    {% endif %}
+
+    <div class="col-4">
+        <form action="" id="add_form" method="post">
+          {%csrf_token%}
+          {% load widget_tweaks %}
+          {%render_field form.text class="form-control" id="exampleFormControlTextarea1" rows="3"%}
+        </form>
+        <button form = "add_form" type="submit" class="btn btn-primary mt-4">Добавить</button>
+    </div>
+
+
+
+{% endblock content %}

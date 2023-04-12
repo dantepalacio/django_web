@@ -1,0 +1,35 @@
+.checkk {
+    font: 162px;
+}
+
+.comment_author {
+    font-weight: bold;
+    font-size: 120%;
+    margin: 0%;
+}
+
+.comment_date {
+    font-weight: lighter;
+    font-size: 80%;
+}
+
+.comment_text {
+    font-weight: normal;
+    font-size: 100%;
+}
+
+
+.article-link {
+    color: #336699; 
+    text-decoration: none; 
+    display: block; 
+    margin-bottom: 10px; 
+  }
+  
+  .article-link:hover {
+    text-decoration: underline; 
+  }
+  
+  .article-link:visited {
+    color: #272327; 
+  }

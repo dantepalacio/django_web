@@ -1,0 +1,131 @@
+{% extends 'layout.html' %}
+{% block content %}
+{% load static %}
+    {% comment %} <div class="header-bar">
+        <h1>Профиль</h>
+        
+        <a href="{% url 'index' %}">&#8592; Назад</a>
+        
+    </div>
+    
+    <div class="card-body">
+    {% if user.profile.profile_pic %}
+      <img src="{{ profile.profile_pic.url }}" height=100 width=100><br><br>
+    {% else %} 
+      <img src="{% static '/pic/user.png' %}" height=100 width=100><br><br>
+    {% endif %}
+      <p><strong>Username:</strong> {{ profile.user.username }}</p><br><br>
+      <p><strong>Bio:</strong> {{ profile.bio }}</p><br><br>
+      {% if profile.twitter %}
+      <p><strong>Twitter:</strong> {{ profile.twitter }}</p><br><br>
+      {% endif %}
+      {% if profile.instagram %}
+      <p><strong>Instagram:</strong> {{ profile.instagram }}</p><br><br>
+      {% endif %}
+      {% if profile.facebook %}
+      <p><strong>Facebook:</strong> {{ profile.facebook }}</p><br><br>
+      {% endif %}
+
+      {% if user.id == profile.user.id %}
+      <a href="{% url 'edit_user_profile' profile.id %}"><button class="button">Edit</button></a>
+      {% endif %}
+      
+    
+    
+    </div> {% endcomment %}
+
+    <section class="h-100 gradient-custom-2">
+      <div class="container py-5 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+          <div class="col col-lg-9 col-xl-7">
+            <div class="card">
+              <div class="rounded-top text-white d-flex flex-row" style="background-color: #000; height:200px;">
+                
+                <div class="ms-4 mt-5 d-flex flex-column" style="width: 150px;">
+                {% if user.profile.profile_pic %}
+                  <img src="{{ profile.profile_pic.url }}" alt="Generic placeholder image" class="img-fluid img-thumbnail mt-4 mb-2"
+                  style="width: 150px; z-index: 1"><br><br>
+                {% else %} 
+                  <img src="{% static '/pic/user.png' %}" alt="Generic placeholder image" class="img-fluid img-thumbnail mt-4 mb-2"
+                  style="width: 150px; z-index: 1"><br><br>
+                {% endif %}
+
+
+
+                {% comment %} <a href="{% url 'edit_user_profile' profile.id %}"><button type="button" class="btn btn-outline-dark" data-mdb-ripple-color="dark" style="z-index: 1;">
+                    Edit profile
+                  </button></a> {% endcomment %}
+                </div>
+                <div class="ms-3" style="margin-top: 130px;">
+                  <h5>{{ profile.user.username }}</h5>
+                  <p>
+                    {% if profile.city == 'None' %}
+                    
+                    {% else %}
+                    {{profile.city}}
+                    {% endif %}
+
+                  </p>
+                </div>
+              </div>
+              <div class="p-4 text-black" style="background-color: #f8f9fa;">
+                {% if request.user.id == profile.user.id %}
+                <a href="{% url 'edit_user_profile' profile.id %}"><button class="btn btn-outline-dark">Edit</button></a>
+                {% endif %}
+                <div class="d-flex justify-content-end text-center py-1">
+                  
+                  {% comment %} <div>
+                    <p class="mb-1 h5">253</p>
+                    <p class="small text-muted mb-0">Photos</p>
+                  </div> {% endcomment %}
+                  <div class="px-3">
+                    <p class="mb-1 h5">{{user_likes}}</p>               {% comment "" %}user_likes{% endcomment %} 
+                    <p class="small text-muted mb-0">Лайки</p>
+                  </div>
+                  <div>
+                    <p class="mb-1 h5">{{arcticle_count}}</p>
+                    <p class="small text-muted mb-0">Количество статей</p>
+                  </div>
+                </div>
+              </div>
+              <div class="card-body p-4 text-black">
+                <div class="mb-5">
+                  <p class="lead fw-normal mb-1">Обо мне</p>
+                  <div class="p-4" style="background-color: #f8f9fa;">
+                    <p class="font-italic mb-1">{{ profile.bio }}</p>
+
+                  </div>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                  <p class="lead fw-normal mb-0">Последние посты:</p>
+                </div>
+                {% for arc in arcticle_list %}
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th scope="col">Название статьи</th>
+                      <th scope="col">Дата публикации</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><a href="{% url 'detail' arc.pk %}" class="article-link">{{ arc.name|truncatechars:15 }}</a></td>
+                      <td>{{arc.date}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                {%endfor%}
+
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+
+{% endblock content %}

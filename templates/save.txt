@@ -1,0 +1,59 @@
+{% if user.is_authenticated %}
+<button id="like-btn" data-arcticle="{{ get_arcticle.id }}" class="btn btn-primary">
+    {% if request.user in arcticle.likes.all %}
+        Unlike
+    {% else %}
+        Like
+    {% endif %}
+    <span id="like-count">{{ arcticle.likes.count }}</span>
+</button>
+{% endif %}
+
+
+
+
+
+
+{% if request.user.id in already_liked %}
+<button id="buttonLike">Unlike</button>
+{% else %}
+<button id="buttonLike">Like</button>
+{% endif %}
+<span id="likes-count">{{ arcticle.likes.count }}</span> likes 
+
+
+
+
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+$('#like-btn').click(function() {
+    var arcticleId = $(this).data('arcticle');
+    var csrfToken = $('input[name="csrfmiddlewaretoken"]').val();
+    $.ajax({
+        type: "POST",
+        url: "{% url 'like_arcticle' %}",
+        data: {
+            'arcticle_id': arcticleId,
+            'csrfmiddlewaretoken': csrfToken
+        },
+        dataType: "json",
+        success: function(response) {
+            $('#like-count').text(response.count);
+            if (response.liked) {
+                $('#like-btn').html('Unlike');
+                console.log('111111111111111111');
+            } else {
+                console.log('222222222222222222');
+                $('#like-btn').html('Like');
+            }
+            var countSpan = $('#like-count-' + arcticleId);
+            countSpan.text(response.count);
+        }
+      });
+  });
+  });
+</script>

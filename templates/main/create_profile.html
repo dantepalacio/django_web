@@ -1,0 +1,22 @@
+{% extends 'layout.html' %}
+{% block content %}
+{%load crispy_forms_tags%}
+    {% if request.user.is_authenticated %}
+        <div class="header-bar">
+            <a href="{% url 'index' %}">&#8592; Back</a>
+        </div>
+<div class="container">
+    <div class="card-body">
+        <form method="POST" action="" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{form|crispy}}
+             
+            <button class='btn btn-danger mt-4' type='submit'>Создать</button>
+        </form>
+    </div>
+</div>
+{% else %}
+    <a href="{% url 'login' %}">Login</a>
+{% endif %}
+
+{% endblock content %}

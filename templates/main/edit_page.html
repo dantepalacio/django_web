@@ -1,0 +1,100 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+<div class='container'>
+    <p><a href="/arcticles/">Назад</a></p>
+    <h1>Создание</h1>
+
+    <!-- Button trigger modal -->
+    <a href="{%url 'create'%}"><button type="button" class="btn btn-primary mb-4">Добавить новую статью</button></a>
+
+    {% if success %}
+        <p style="color:green">Запись добавлена</p>
+    {% endif %}
+
+
+
+
+  {% if messages %}
+
+  <div class="alert alert-success">
+    {% for m in messages %}
+      {{m}}
+    {% endfor %}
+  </div>
+
+  {% endif %}
+
+
+
+    {% if update_text %}
+
+    {% if success_update %}
+    <p style="color:green">Успешно обновлено</p>
+    {%endif%}
+    <p >Страница редактирования</p>
+    <p><a href="{%url 'edit'%}">Назад</a></p>
+    <form id="update_data" method="post">
+        {%csrf_token%}
+        {{form}}
+    </form>
+    <button form = "update_data" type="submit" class="btn btn-primary mt-4">Обновить</button>
+
+    {% else %}
+
+    <table class="table table-bordered mt-4">
+        <thead>
+          <tr>
+            <th scope="col">id</th>
+            <th scope="col">Автор</th>
+            <th scope="col">Дата создания</th>
+            <th scope="col">Название</th>
+            <th scope="col">Редактирование</th>
+            <th scope="col">Удаление</th>
+          </tr>
+        </thead>
+        <tbody>
+            {% for i in list_arcticles %}
+          <tr {%if i.id == request.GET.id|add:'0' %} style='background:#d3d3d3' {%endif%}>
+            <th>{{forloop.counter}}</th>
+            <td>{{i.author}}</td>
+            <td>{{i.date|date:'d.m.Y'}}</td>
+            <td>{{i.name}}</td>
+
+            <td>
+              {% if request.user == i.author %}
+              <a href="{% url 'update' i.id %}">Редактировать</a>
+              {% else %}
+              Нет доступа
+              {% endif %}
+            </td>
+            <td>
+              {% if request.user == i.author %}
+              <form id="delete_form{{i.id}}"action="{% url 'delete' i.id %}" method="post">{%csrf_token%}</form>
+              <a href="javascript:void()" onclick="delete_question{{i.id}}()">Удалить</a>
+              <script>
+                function delete_question{{i.id}}() {
+                  if (confirm("Вы уверены")) {
+                    document.getElementById('delete_form{{i.id}}').submit()
+                  }
+                }
+              </script>
+              {% else %}
+              нет доступа
+              {% endif %}
+            </td>
+          </tr>
+          {%endfor%}
+        </tbody> 
+      </table> 
+
+
+      {% endif %}
+        
+
+
+</div>
+
+{% endblock content %}
+

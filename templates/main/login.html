@@ -1,0 +1,14 @@
+{% extends 'layout.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container">
+  <h2>Вход</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <button class="btn btn-success mt-4" type="submit">Авторизация</button>
+  </form>
+</div>  
+{% endblock %}
+
