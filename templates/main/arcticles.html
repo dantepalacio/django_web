@@ -31,7 +31,7 @@
         </div>
         <div class="card-body">
           <h5 class="card-title">{{i.name}}</h5>
-          <p class="card-text">{{i.text}}</p>
+          <p class="card-text">{{i.text|truncatechars:'250'}}</p>
 
 
           <a href="/detail/{{i.id}}" class="btn btn-primary">Читать</a>

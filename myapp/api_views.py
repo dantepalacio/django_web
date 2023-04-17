@@ -1,5 +1,6 @@
 import datetime
 from io import BytesIO
+from django.http import Http404
 from django.shortcuts import get_object_or_404
 from rest_framework import generics, permissions
 from django.contrib.auth import authenticate
@@ -18,7 +19,7 @@ from rest_framework.parsers import MultiPartParser, FormParser
 from django.core.files.base import ContentFile
 import base64
 from django.core.files.uploadedfile import InMemoryUploadedFile
-
+from rest_framework.exceptions import PermissionDenied
 
 
 class RegisterAPI(generics.GenericAPIView):
@@ -177,12 +178,30 @@ class ProfileCreateAPIView(generics.CreateAPIView):
         return Response({'profile': ProfileSerializer(profile).data}, status=status.HTTP_201_CREATED)
 
 
-class ProfileRetrieveAPIView(generics.RetrieveAPIView):
+class ProfileAPIView(APIView):
+    parser_classes = (MultiPartParser, FormParser)
     serializer_class = ProfileSerializer
-    permission_classes = [permissions.IsAuthenticated]
 
-    def get_object(self):
-        return self.request.user.profile
+    def get_object(self):        
+        user_id = self.kwargs.get('pk')
+        try:
+            return Profile.objects.get(user_id=user_id)
+        except Profile.DoesNotExist:
+            raise Http404('Profile not found')
+            
+    def get(self, request, *args, **kwargs):
+        profile = self.get_object()
+        serializer = self.serializer_class(profile)
+        return Response(serializer.data)
+
+    def put(self, request, *args, **kwargs):
+        profile = self.get_object()
+        serializer = self.serializer_class(profile, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ProfileUpdateAPIView(generics.UpdateAPIView):

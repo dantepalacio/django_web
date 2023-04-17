@@ -3,8 +3,8 @@ from django.contrib.auth.models import User
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericRelation
-
-
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 
 class CustomUser(User):
     pass
@@ -46,6 +46,25 @@ class Like(models.Model):
     user = models.ForeignKey(User,related_name='likes', on_delete=models.CASCADE)
     arcticle = models.ForeignKey(Arcticle, on_delete=models.CASCADE, null=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
+
+
+    def save(self, *args, **kwargs):
+        print('zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz')
+        channel_layer = get_channel_layer()
+        like_data = {'user': self.user, 
+                     'arcticle': self.arcticle.name, 
+                     'author_id': self.arcticle.author.id}
+        
+        async_to_sync(channel_layer.group_send)(
+            'like_updates',
+            {
+                'type': 'handle_like',
+                'message': like_data
+            }
+        )
+        super(Like, self).save(*args, **kwargs)
+
+
 
  
 

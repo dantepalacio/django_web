@@ -24,6 +24,9 @@ from django.shortcuts import HttpResponse
 from django.core import serializers
 
 
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
+
 from .forms import CustomRegistrationForm, ArcticleForm, CommentForm, ProfileForm
 from . import models
 
@@ -247,28 +250,6 @@ class ShowProfilePageView(LoginRequiredMixin,DetailView):
 		return context
 	
 
-	# def get(self, request, *args, **kwargs):
-	# 	user = request.user
-	# 	if not models.Profile.objects.filter(user=user):
-	# 		return redirect('create_user_profile')
-	# 	return super().get(request, *args, **kwargs)
-
-
-	# def get_context_data(self, *args, **kwargs):
-	# 	context = super().get_context_data(*args, **kwargs)
-	# 	page_user = get_object_or_404(models.Profile, id=self.kwargs['pk'])
-	# 	user = self.object.id
-	# 	arcticles_len = models.Arcticle.objects.filter(author_id=user)
-	# 	user_likes = models.Like.objects.filter(user_id = user)
-	# 	arcticles_user = models.Arcticle.objects.filter(author_id = user)
-
-	# 	context['page_user'] = page_user	
-	# 	context['arcticle_count'] = arcticles_len.count()
-	# 	context['user_likes'] = user_likes.count()
-	# 	context['arcticle_list'] = arcticles_user
-	# 	return context
-
-
 
 class CreateProfilePageView(CreateView):
 	model = models.Profile
@@ -338,15 +319,6 @@ def like_arcticle(request):
 
 
 
-
-		# if request.user.is_authenticated:
-		# 	arcticle.likes.add(request.user)
-		# 	arcticle.save()
-		# 	return JsonResponse({'status': 'ok', 'likes_count': arcticle.likes.count()})
-		# else:
-		# 	return JsonResponse({'status': 'error', 'message': 'User not authenticated.'})
-
-
 def unlike_arcticle(request):
 	if request.method == 'POST':
 		arcticle_id = request.POST.get('arcticle_id')
@@ -360,18 +332,17 @@ def unlike_arcticle(request):
 
 
 
+def answered(request):
+    channel_layer = get_channel_layer()
+    async_to_sync(channel_layer.group_send)(
+        'online',
+        {
+            'type': 'user_commented',
+            'message': "На ваш комментарий ответили"
+        }
+    )
+    # consumer = NotificationConsumer()
+    # consumer.receive("бла бла бла")
 
-# def like_arcticle(request):
-#     print('sdfkogjiosdfgioshdefgsdfgsdfgdsfgsgfd')
-#     arcticle_id = request.POST.get('arcticle_id')
-#     arcticle = get_object_or_404(models.Arcticle, id=arcticle_id)
-#     user = request.user
-#     like = models.Like.objects.filter(user=user, arcticle=arcticle)
-#     if like.exists():
-#         like.delete()
-#         liked = False
-#     else:
-#         models.Like.objects.create(user=user, arcticle=arcticle)
-#         liked = True
-#     context = {'liked': liked, 'count': arcticle.likes.count()}
-#     return JsonResponse(context)
+    return render(request, 'main/index.html')
+

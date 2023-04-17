@@ -41,8 +41,10 @@ urlpatterns = [
     path('delete_like/<int:pk>/', DeleteLike.as_view(), name='delete-like'),
 
     path('profiles/create/', ProfileCreateAPIView.as_view(), name='create-profile'),
-    path('profiles/<int:pk>/', ProfileRetrieveAPIView.as_view(), name='show-profile'),
+    path('profiles/<int:pk>/', ProfileAPIView.as_view(), name='show-profile'),
     path('profiles/edit/<int:pk>/', ProfileUpdateAPIView.as_view(), name='profile-detail'),
+
+    path('answered', views.answered), #channel test
 ] 
 
 if settings.DEBUG:

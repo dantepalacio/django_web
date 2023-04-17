@@ -39,6 +39,7 @@ MEDIA_URL = '/media/'
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -55,6 +56,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'widget_tweaks',
+    'channels',
     
 
     'crispy_forms',
@@ -64,6 +66,17 @@ INSTALLED_APPS = [
 SITE_ID = 1
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+ASGI_APPLICATION = "mysite.asgi.application"
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+    },
+    'CONFIG': {
+        "hosts": [('192.168.0.8', 8000)],
+    },
+}
 
 #AUTH_USER_MODEL = 'myapp.CustomUser'
 

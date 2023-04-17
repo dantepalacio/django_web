@@ -62,6 +62,8 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = '__all__'
+    
+    profile_pic = serializers.ImageField(max_length=None, use_url=True)
 
 
 class LikeSerializer(serializers.ModelSerializer):
