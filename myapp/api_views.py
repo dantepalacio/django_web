@@ -20,6 +20,16 @@ from django.core.files.base import ContentFile
 import base64
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from rest_framework.exceptions import PermissionDenied
+from rest_framework.filters import SearchFilter
+
+
+@api_view(['GET'])
+def get_username(request, user_id):
+    try:
+        user = User.objects.get(id=user_id)
+        return Response({'username': user.username})
+    except User.DoesNotExist:
+        return Response(status=404)
 
 
 class RegisterAPI(generics.GenericAPIView):
@@ -73,8 +83,6 @@ class ArcticleCreateAPIView(generics.CreateAPIView):
     def create(self, request, *args, **kwargs):
         request.data['author_id'] = request.user.id
         return super().create(request, *args, **kwargs)
-
-
 
 
 class ArcticleDetail(generics.RetrieveAPIView):
@@ -227,3 +235,10 @@ class ProfileUpdateAPIView(generics.UpdateAPIView):
         serializer.save()
 
         return Response(serializer.data, status=status.HTTP_200_OK)
+    
+
+class ArticleSearchView(ListAPIView):
+    serializer_class = SearchArcticleSerializer
+    filter_backends = [SearchFilter]
+    search_fields = ['name', 'author__username', 'text']
+    queryset = Arcticle.objects.all()

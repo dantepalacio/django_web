@@ -20,7 +20,7 @@ from django.contrib import messages
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import HttpResponse
-
+from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
 from django.core import serializers
 
 
@@ -333,16 +333,42 @@ def unlike_arcticle(request):
 
 
 def answered(request):
-    channel_layer = get_channel_layer()
-    async_to_sync(channel_layer.group_send)(
-        'online',
-        {
-            'type': 'user_commented',
-            'message': "На ваш комментарий ответили"
-        }
-    )
-    # consumer = NotificationConsumer()
-    # consumer.receive("бла бла бла")
+	channel_layer = get_channel_layer()
+	async_to_sync(channel_layer.group_send)(
+		'online',
+		{
+			'type': 'user_commented',
+			'message': "На ваш комментарий ответили"
+		}
+	)
+	# consumer = NotificationConsumer()
+	# consumer.receive("бла бла бла")
 
-    return render(request, 'main/index.html')
+	return render(request, 'main/index.html')
 
+
+
+
+class SearchView(ListView):
+	model = models.Arcticle
+	template_name = 'main/search.html'
+
+	def get_queryset(self):
+		queryset = super().get_queryset()
+
+		search_query = self.request.GET.get('q', '')
+		vector = SearchVector('name', 'author__username', 'text')
+		query = SearchQuery(search_query)
+
+		queryset = queryset.annotate(search=vector).annotate(rank=SearchRank(vector, query))
+
+		queryset = queryset.filter(search=query).order_by('-rank')
+
+		return queryset
+	
+	def get_context_data(self, **kwargs):
+		context = super().get_context_data(**kwargs)
+		search_query = self.request.GET.get('q', '')
+		context['search_results'] = self.get_queryset()
+		context['search_query'] = search_query
+		return context

@@ -1,0 +1,28 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+<div class="container">
+    <h1 class="text-center my-5">Поиск</h1>
+
+    <form method="GET" action="{% url 'search' %}">
+      <div class="input-group mb-3">
+        <input type="text" class="form-control" placeholder="Search term" name="q" aria-label="Search term">
+        <div class="input-group-append">
+          <button class="btn btn-outline-secondary" type="submit">Найти</button>
+        </div>
+      </div>
+    </form>
+
+    {% if search_results %}
+    <h3 class="mt-3">Результаты поиска</h3>
+    <ul>
+      {% for result in search_results %}
+      <li><a href="{% url 'detail' pk=result.pk %}">{{ result.name }}</a></li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+
+  </div>
+
+{% endblock content %}

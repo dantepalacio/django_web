@@ -8,7 +8,7 @@
     <h1>Статья: {{arcticle.name}}</h1>
     <h3>Автор: {{arcticle.author}}</h3>
     <p>
-        {{arcticle.text}}
+        {{arcticle.text|linebreaks}}
     </p>
 
     {% comment %} ЛАЙК {% endcomment %}
@@ -17,15 +17,9 @@
 
     <div id="like-section">
       <a name="{{ arcticle.id }}" data-status = "{{status}}"style="font-size:48px; color: green" class="likin" id="co"><i class="fa fa-thumbs-up" aria-hidden="true"></i>(<span id="likes">{{likes.count}}</span>)</a>
-      <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-sm">Лайкнувшие</button>
-      <div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-sm">
-          <div class="modal-content">
-            ...
-          </div>
-        </div>
-      </div>
-    </div>  
+
+    </div>
+
     {% comment %} asdasd {{ arcticle.likes }} {% endcomment %}
     <script>
       $('.likin').click(function(){

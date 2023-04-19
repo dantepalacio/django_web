@@ -36,10 +36,6 @@ class ArcticleSerializer(serializers.ModelSerializer):
         model = Arcticle
         fields = '__all__'
 
-# class ArcticleCreateSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Arcticle
-#         fields = ['name', 'text', 'author']
 
 class ArcticleCreateSerializer(serializers.ModelSerializer):
     author_id = serializers.IntegerField(write_only=True)
@@ -70,4 +66,9 @@ class LikeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Like
         fields = '__all__'
+
+class SearchArcticleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Arcticle
+        fields = ('id', 'name', 'author', 'date', 'text')
 

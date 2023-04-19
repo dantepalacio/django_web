@@ -34,6 +34,11 @@
               {% url 'edit' as url_edit %}
               <a class="nav-link {% if url_edit == request.path %}active {%endif%}" href="{{url_edit}}">Создать/Ред</a>
             </li>
+            <li class="nav-item">
+              {% url 'search' as url_search %}
+              <a class="nav-link {% if url_search == request.path %}active {%endif%}" href="{{url_search}}">Поиск</a>
+            </li>
+
 
 
 
@@ -71,16 +76,6 @@
 
             {% endif %}
 
-
-            {% comment %} <li class="nav-item">
-              <a class="nav-link disabled" href="#">Disabled</a>
-            </li>
-          </ul>
-          <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-          </form>
-        </div> {% endcomment %}
       </nav>
     </div>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>

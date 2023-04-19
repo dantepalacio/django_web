@@ -24,7 +24,8 @@ urlpatterns = [
     path('edit_profile_page/<int:pk>/',EditProfilePageView.as_view(), name='edit_user_profile'),
     # path('like_arcticle/', views.like_arcticle, name='like_arcticle'),
     path('like/', views.like_arcticle, name='like_arcticle'),
-    path('unlike/', views.unlike_arcticle, name='unlike_arcticle'),  
+    path('unlike/', views.unlike_arcticle, name='unlike_arcticle'),
+    path('search/', views.SearchView.as_view(), name='search'),  
 
 #api urls
     path('api-arcticles/', ArcticleList.as_view(), name='api-arcticles'),
@@ -44,7 +45,9 @@ urlpatterns = [
     path('profiles/<int:pk>/', ProfileAPIView.as_view(), name='show-profile'),
     path('profiles/edit/<int:pk>/', ProfileUpdateAPIView.as_view(), name='profile-detail'),
 
-    path('answered', views.answered), #channel test
+    path('api-search/', ArticleSearchView.as_view(), name='article_search'),
+
+    path('api/get-username/<int:user_id>/', get_username), 
 ] 
 
 if settings.DEBUG:

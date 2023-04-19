@@ -5,6 +5,10 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericRelation
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
+from django.contrib.postgres.search import SearchVectorField
+from django.contrib.postgres.search import SearchVector, SearchVectorField, SearchQuery, SearchRank
+from django.db import connections
+
 
 class CustomUser(User):
     pass
@@ -23,7 +27,9 @@ class Arcticle(models.Model):
     author = models.ForeignKey(User, on_delete= models.CASCADE, verbose_name='Автор', blank=True, null=True)
     date = models.DateField(auto_now_add=True)
     text = models.TextField(verbose_name='Текст статьи')
-    # likes = models.ForeignKey(Like, related_name='liked_articles')
+    search_vector = SearchVectorField(null=True, blank=True)
+
+
 
 
     def __str__(self):

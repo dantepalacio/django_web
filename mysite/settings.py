@@ -36,6 +36,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -57,6 +58,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'widget_tweaks',
     'channels',
+    'django.contrib.postgres',
     
 
     'crispy_forms',
@@ -116,12 +118,33 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'postgres',
+        'USER': 'palacio',
+        'PASSWORD': 'anuar123',
+        'HOST': 'database-2.c9mjwirozkag.eu-north-1.rds.amazonaws.com',
+        'PORT': '5432',
     }
 }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'postgres',
+#         'USER': 'palacio',
+#         'PASSWORD': 'anuar123',
+#         'HOST': 'djangodb.cluster-c9mjwirozkag.eu-north-1.rds.amazonaws.com',
+#         'PORT': '5432',
+#     }
+# }
 
 
 # Password validation
